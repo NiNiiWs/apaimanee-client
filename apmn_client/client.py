@@ -44,6 +44,7 @@ class ConsumeThread(threading.Thread):
         super().__init__()
 
         self.mqtt_client = mqtt_client
+        self.deamon = True
 
     def run(self):
 
