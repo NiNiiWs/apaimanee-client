@@ -91,7 +91,7 @@ class ApaimaneeClient:
         #self.mqtt_client.message_callback_add('apaimanee/status', callbacks.status)
 
 
-    def publish(self, topic, args=None):
+    def publish(self, topic, args=None, qos=0, retain=False):
         if args is None:
             args = dict()
 
@@ -99,7 +99,7 @@ class ApaimaneeClient:
         payload = json.dumps(args)
 
         print('topic:', topic,'publish:', payload,)
-        self.mqtt_client.publish(topic, payload)
+        self.mqtt_client.publish(topic, payload, qos, retain)
 
 
     def call(self, args):
@@ -108,7 +108,7 @@ class ApaimaneeClient:
             args = dict()
 
         args['message_id'] = message_id
-        self.publish('apaimanee/clients/request', args)
+        self.publish('apaimanee/clients/request', args, 1)
 
         started_date = datetime.datetime.now()
         while not self.rpc.check_response(message_id):
