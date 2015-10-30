@@ -7,11 +7,17 @@ class ApaimaneeClientTest:
 
     def login(self):
 
-        response = self.client.user.login('username', 'password')
+        response = self.client.user.login('Aran', '12345')
         print('login response: ', response)
+
+    def register(self):
+
+        response = self.client.user.register('Niniw', '12345', 'aran@hotmail.com', 'aran', 'khunaree')
+        print('register response: ', response)
 
     def create(self):
         print('login first')
+
 
     def status(self):
         print('controller status')
@@ -19,12 +25,15 @@ class ApaimaneeClientTest:
     def start(self):
         self.client.initial()
         commands = dict(
-                l=self.login,
-                c=self.create,
-                s=self.status
+                login = self.login,
+                register = self.register,
+                create = self.create,
+                start = self.status
                 )
         while True:
-            cmd = input('Enter command:')
+            print('Please Mode command:1.login 2.register 3.create 4.start')
+            cmd = input('Enter command :')
+
             func = commands.get(cmd, None)
             if func is not None:
                 func()

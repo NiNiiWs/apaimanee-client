@@ -12,5 +12,10 @@ class UserManager:
 
         self.loggedin_info = response
 
-        return response['loggedin']
+        return response
 
+    def register(self, username, password, email, first_name, last_name):
+        args = dict(username=username, password=password, email=email, first_name=first_name, last_name=last_name, method='register')
+        response = self.client.call(args)
+
+        return response
