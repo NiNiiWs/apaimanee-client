@@ -6,8 +6,8 @@ class UserManager:
 
         self.loggedin_info = None
 
-    def login(self, username, password):
-        args = dict(username=username, password=password, method='login')
+    def login(self, email):
+        args = dict(email=email, method='login')
         response = self.client.call(args)
 
         self.loggedin_info = response
@@ -15,7 +15,12 @@ class UserManager:
         return response
 
     def register(self, username, password, email, first_name, last_name):
-        args = dict(username=username, password=password, email=email, first_name=first_name, last_name=last_name, method='register')
+        args = dict(username=username,
+                password=password,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                method='register')
         response = self.client.call(args)
 
         return response

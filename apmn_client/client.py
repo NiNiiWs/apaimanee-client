@@ -73,6 +73,8 @@ class ApaimaneeClient:
         self.user = manager.UserManager(self)
         # add adition manager
 
+        self.user = manager.RoomManager(self)
+
 
     def initial(self):
         self.reconnect()
