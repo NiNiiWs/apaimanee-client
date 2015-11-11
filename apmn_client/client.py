@@ -70,11 +70,9 @@ class ApaimaneeClient:
         self.rpc = RPC()
         self.mqtt_client.user_data_set(self.rpc)
 
-        self.user = manager.UserManager(self)
         # add adition manager
-
-        self.user = manager.RoomManager(self)
-
+        self.user = manager.UserManager(self)
+        self.room = manager.RoomManager(self)
 
     def initial(self):
         self.reconnect()
@@ -104,13 +102,19 @@ class ApaimaneeClient:
         self.mqtt_client.publish(topic, payload, qos, retain)
 
 
-    def call(self, args):
+    def call(self, method, args=None):
         message_id = str(uuid.uuid4())
-        if args is None:
-            args = dict()
+        request = dict()
 
-        args['message_id'] = message_id
-        self.publish('apaimanee/clients/request', args, 1)
+        request['message_id'] = message_id
+        if self.user.is_loggedin():
+            request['token'] = self.user.get_token()
+
+
+        request['method'] = method
+        request['args'] = args
+        request['status'] = 'request'
+        self.publish('apaimanee/clients/request', request, 1)
 
         started_date = datetime.datetime.now()
         while not self.rpc.check_response(message_id):
