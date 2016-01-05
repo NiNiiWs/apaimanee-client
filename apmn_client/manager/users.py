@@ -8,14 +8,15 @@ class UserManager(Manager):
 
     def get_token(self):
         if self.is_loggedin():
-            self.loggedin_info['token']
+            return self.loggedin_info['token']
         return None
 
     def login(self, email):
         args = dict(email=email)
         response = self.call('login',args)
 
-        self.loggedin_info = response
+        if 'responses' in response:
+            self.loggedin_info = response.get('responses')
 
         return response
 
