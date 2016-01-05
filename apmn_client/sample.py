@@ -16,19 +16,21 @@ class ApaimaneeClientTest:
         print('register response: ', response)
 
     def create_room(self):
-        if not self.client.user.is_loggedin:
+        if not self.client.user.is_loggedin():
             self.login()
 
-        user_id = self.client.user.get_user_id()
 
-        response = self.client.room.create_room('AAA', user_id)
+        response = self.client.room.create_room('AAA')
         print('creat room response: ', response)
         return response
 
     def join_game(self):
         create_room_response = self.create_room()
-        response = self.client.room.join_game(create_room_response['room_id'], create_room_response['user_id'])
+        response = self.client.room.join_game(create_room_response['responses']["room_id"])
         print('join game response:', response)
+
+    def hero_select(self):
+        pass
 
     def status(self):
         print('controller status')

@@ -94,12 +94,14 @@ class ApaimaneeClient:
         #self.mqtt_client.message_callback_add('apaimanee/status', callbacks.status)
 
 
-    def publish(self, topic, args=None, qos=0, retain=False):
-        if args is None:
-            args = dict()
+    def publish(self, topic, request, qos=0, retain=False):
 
-        args['client_id'] = self.client_id
-        payload = json.dumps(args)
+        request['client_id'] = self.client_id
+
+        if self.user.is_loggedin():
+            request['token'] = self.user.get_token()
+
+        payload = json.dumps(request)
 
         print('topic:', topic,'publish:', payload,)
         self.mqtt_client.publish(topic, payload, qos, retain)
@@ -110,9 +112,6 @@ class ApaimaneeClient:
         request = dict()
 
         request['message_id'] = message_id
-        if self.user.is_loggedin():
-            request['token'] = self.user.get_token()
-
 
         request['method'] = method
         request['args'] = args
