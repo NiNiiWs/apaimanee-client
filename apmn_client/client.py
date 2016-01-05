@@ -8,10 +8,11 @@ import threading
 
 from . import callbacks
 from . import manager
+from . import monitors
 
 def on_connect(client, userdata, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("apaimanee/#")
+    client.subscribe('apaimanee/clients/{}/#'.format(client._client_id))
 
 
 def on_message(client, userdata, msg):
@@ -73,6 +74,8 @@ class ApaimaneeClient:
         # add adition manager
         self.user = manager.UserManager(self)
         self.room = manager.RoomManager(self)
+
+        self.gm = monitors.GameMonitor(self)
 
     def initial(self):
         self.reconnect()
