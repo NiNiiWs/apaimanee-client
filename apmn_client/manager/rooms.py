@@ -11,6 +11,9 @@ class RoomManager(Manager):
         args = dict(name_room=name_room)
 
         response = self.call('create_room', args)
+        if 'room_id' in response['responses']:
+
+            self.client.gm.start_game(response['responses']['room_id'])
 
         return response
 
@@ -19,5 +22,8 @@ class RoomManager(Manager):
         args = dict(room_id=room_id)
 
         response  = self.call('join_game', args)
+        if not self.client.gm.is_running():
+            if 'room_id' in response['responses']:
+                self.client.gm.start_game(response['responses']['room_id'])
 
         return response

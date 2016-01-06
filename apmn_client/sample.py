@@ -1,6 +1,9 @@
 import json
 from .client import ApaimaneeClient
 
+import traceback
+
+
 class ApaimaneeClientTest:
     def __init__(self):
         self.client = ApaimaneeClient()
@@ -52,7 +55,8 @@ class ApaimaneeClientTest:
             if func is not None:
                 try:
                     func()
-                except:
-                    print('Error in function')
+                except Exception as e:
+                    traceback.print_exc(file=sys.stdout)
+                    print('Error in function', e)
 
 

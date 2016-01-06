@@ -91,8 +91,6 @@ class ApaimaneeClient:
         print('regist:', 'apaimanee/clients/'+self.client_id+'/response')
         self.mqtt_client.message_callback_add('apaimanee/clients/'+self.client_id+'/response',
                 self.rpc.rpc_response)
-        #self.mqtt_client.message_callback_add('apaimanee/status', callbacks.status)
-
 
     def publish(self, topic, request, qos=0, retain=False):
 
