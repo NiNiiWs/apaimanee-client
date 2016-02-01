@@ -25,10 +25,9 @@ class GameMonitor(threading.Thread):
 
     def start_game(self, room_id):
 
-        print("start game:\n\n\n")
         self._running = True
         self.room_id = room_id
-        self.subscribe_topic = 'apaimanee/clients/{}/rooms/{}/#'.format(self.client.client_id, room_id)
+        self.subscribe_topic = 'apaimanee/clients/{}/rooms/{}/synchronize'.format(self.client.client_id, room_id)
         self.publish_topic = 'apaimanee/clients/{}/rooms/{}/update'.format(self.client.client_id, room_id)
 
         self.mqtt_client.message_callback_add(self.subscribe_topic, self.on_game_message)
