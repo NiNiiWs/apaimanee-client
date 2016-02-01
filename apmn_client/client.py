@@ -32,7 +32,7 @@ class RPC:
             return self.response.pop(request_id)
         return None
 
-    def rpc_response(self, client, rpc, msg):
+    def rlc_response(self, client, rpc, msg):
         payload = json.loads(msg.payload.decode('utf-8'))
 
         print("get response:", payload)
@@ -57,9 +57,15 @@ class ConsumeThread(threading.Thread):
             self.mqtt_client.disconnect()
 
 class ApaimaneeClient:
-    def __init__(self):
+    def __init__(self, client_id=None, host='localhost', port='1883'):
 
-        self.client_id = str(uuid.uuid1())
+        if client_id:
+            self.client_id = client_id
+        else:
+            self.client_id = str(uuid.uuid1())
+
+        self._host = host
+        self._port = port
 
         self.mqtt_client = mqttclient.Client(self.client_id,
                 clean_session=False)
@@ -83,7 +89,7 @@ class ApaimaneeClient:
         self.consume_thread.start()
 
     def reconnect(self):
-        self.mqtt_client.connect("localhost", 1883, 60)
+        self.mqtt_client.connect(self._host, self._port, 60)
         #self.mqtt_client.subscribe('apaimanee/clients/#')
         self.register_callback()
 
