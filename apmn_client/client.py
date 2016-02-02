@@ -7,7 +7,7 @@ import datetime
 import threading
 
 from . import callbacks
-from . import manager
+from . import managers
 from . import monitors
 
 def on_connect(client, userdata, rc):
@@ -32,7 +32,7 @@ class RPC:
             return self.response.pop(request_id)
         return None
 
-    def rlc_response(self, client, rpc, msg):
+    def rpc_response(self, client, rpc, msg):
         payload = json.loads(msg.payload.decode('utf-8'))
 
         print("get response:", payload)
@@ -78,8 +78,9 @@ class ApaimaneeClient:
         self.mqtt_client.user_data_set(self.rpc)
 
         # add adition manager
-        self.user = manager.UserManager(self)
-        self.room = manager.RoomManager(self)
+        self.user = managers.UserManager(self)
+        self.room = managers.RoomManager(self)
+        self.game = managers.GameManager(self)
 
         self.gm = monitors.GameMonitor(self)
 

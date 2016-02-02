@@ -4,7 +4,7 @@ from .base import Manager
 class RoomManager(Manager):
     def __init__(self, client):
         super().__init__(client)
-        self.rooms = RoomManager
+        self.current_room = None
 
     def create_room(self, name_room):
         print("Create Room")
@@ -26,4 +26,5 @@ class RoomManager(Manager):
             if 'room_id' in response['responses']:
                 self.client.gm.start_game(response['responses']['room_id'])
 
+        self.current_room = args
         return response
