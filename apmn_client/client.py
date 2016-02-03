@@ -87,6 +87,7 @@ class ApaimaneeClient:
         self.room = managers.RoomManager(self)
         self.game = managers.GameManager(self)
         self.gm = None
+        self.consume_thread = None
 
 
     def initial(self):
@@ -101,8 +102,10 @@ class ApaimaneeClient:
         self.gm = monitors.GameMonitor(self)
 
     def disconnect(self):
-        self.consume_thread.stop()
-        self.gm.stop()
+        if self.consume_thread:
+            self.consume_thread.stop()
+        if self.gm:
+            self.gm.stop()
 
     def register_callback(self):
         print('regist:', 'apaimanee/clients/'+self.client_id+'/response')
