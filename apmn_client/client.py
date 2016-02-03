@@ -17,7 +17,7 @@ def on_connect(client, userdata, rc):
 
 def on_message(client, userdata, msg):
     payload = json.loads(msg.payload.decode('utf-8'))
-    print(msg.topic+" "+json.dumps(payload))
+    print(msg.topic+" got "+json.dumps(payload))
 
 
 class RPC:
@@ -46,6 +46,11 @@ class ConsumeThread(threading.Thread):
 
         self.mqtt_client = mqtt_client
         self.deamon = True
+        self.running = True
+
+    def stop(self):
+        self.running = False
+        self.mqtt_client.disconnect()
 
     def run(self):
 
@@ -81,8 +86,8 @@ class ApaimaneeClient:
         self.user = managers.UserManager(self)
         self.room = managers.RoomManager(self)
         self.game = managers.GameManager(self)
+        self.gm = None
 
-        self.gm = monitors.GameMonitor(self)
 
     def initial(self):
         self.reconnect()
@@ -93,6 +98,11 @@ class ApaimaneeClient:
         self.mqtt_client.connect(self._host, self._port, 60)
         #self.mqtt_client.subscribe('apaimanee/clients/#')
         self.register_callback()
+        self.gm = monitors.GameMonitor(self)
+
+    def disconnect(self):
+        self.consume_thread.stop()
+        self.gm.stop()
 
     def register_callback(self):
         print('regist:', 'apaimanee/clients/'+self.client_id+'/response')
