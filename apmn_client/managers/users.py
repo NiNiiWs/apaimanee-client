@@ -11,8 +11,8 @@ class UserManager(Manager):
             return self.loggedin_info['token']
         return None
 
-    def login(self, email):
-        args = dict(email=email)
+    def login(self, username, password):
+        args = dict(username=username, password=password)
         response = self.call('login',args)
 
         if 'responses' in response:

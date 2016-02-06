@@ -62,7 +62,7 @@ class ConsumeThread(threading.Thread):
             self.mqtt_client.disconnect()
 
 class ApaimaneeClient:
-    def __init__(self, client_id=None, host='localhost', port='1883'):
+    def __init__(self, client_id=None, host='localhost', port=1883):
 
         if client_id:
             self.client_id = client_id
@@ -96,6 +96,7 @@ class ApaimaneeClient:
         self.consume_thread.start()
 
     def reconnect(self):
+        print('connnect to api:', self._host, ' port:', self._port)
         self.mqtt_client.connect(self._host, self._port, 60)
         #self.mqtt_client.subscribe('apaimanee/clients/#')
         self.register_callback()
