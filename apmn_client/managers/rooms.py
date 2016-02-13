@@ -6,9 +6,9 @@ class RoomManager(Manager):
         super().__init__(client)
         self.current_room = None
 
-    def create_room(self, name_room):
+    def create_room(self, room_name):
         print("Create Room")
-        args = dict(name_room=name_room)
+        args = dict(room_name = room_name)
 
         response = self.call('create_room', args)
         if 'room_id' in response['responses']:
@@ -27,4 +27,16 @@ class RoomManager(Manager):
                 self.client.gm.start_game(response['responses']['room_id'])
 
         self.current_room = args
+        return response
+
+    def list_rooms(self):
+        args = dict()
+        response = self.call('list_rooms', args)
+
+        return response
+
+    def list_players(self):
+        args = dict(room_id=self.current_room['room_id'])
+        response = self.call('list_players', args)
+
         return response
