@@ -40,3 +40,8 @@ class RoomManager(Manager):
         response = self.call('list_players', args)
 
         return response
+
+    def select_hero(self, hero):
+        args = dict(hero=hero, room_id=self.current_room['room_id'])
+        response =self.call('select_hero', args)
+        return response
