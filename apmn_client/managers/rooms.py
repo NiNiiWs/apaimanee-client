@@ -12,9 +12,8 @@ class RoomManager(Manager):
 
         response = self.call('create_room', args)
         if 'room_id' in response['responses']:
-
-            self.client.gm.start_game(response['responses']['room_id'])
-
+            self.join_game(response['responses']['room_id'])
+        #    self.client.gm.start_game(response['responses']['room_id'])
         return response
 
     def join_game(self, room_id):
