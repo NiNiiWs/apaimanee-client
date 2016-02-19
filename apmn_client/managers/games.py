@@ -16,4 +16,8 @@ class GameManager(Manager):
         args = dict()
         self.update('ready', args)
 
+    def initial(self):
+        args = dict()
+        self.update('initial', args)
+
 

@@ -48,7 +48,7 @@ class GameMonitor(threading.Thread):
 
         method = game_msg['method']
         args=dict()
-        if 'args' in game_msg:
+        if 'args' in game_msg and not game_msg['args'] is None:
             args = game_msg['args']
         func = None
         try:
