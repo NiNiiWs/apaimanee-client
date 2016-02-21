@@ -44,3 +44,11 @@ class RoomManager(Manager):
         args = dict(hero=hero, room_id=self.current_room['room_id'])
         response =self.call('select_hero', args)
         return response
+
+    def disconnect_room(self):
+        print("Disconnect Room")
+        args =dict(room_id=self.current_room['room_id'])
+        response = self.call('disconnect_room', args)
+        self.current_room = None
+
+        return response
