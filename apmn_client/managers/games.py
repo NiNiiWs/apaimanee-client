@@ -21,6 +21,6 @@ class GameManager(Manager):
         self.update('initial', args)
 
     def move_hero(self, x, y):
-        args = dict(x=x, y=y, client_id=self.client.client_id)
+        args = dict(x=x, y=y)
         self.update('move_hero', args)
 

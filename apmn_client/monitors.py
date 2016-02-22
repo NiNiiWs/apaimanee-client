@@ -53,8 +53,10 @@ class GameMonitor(threading.Thread):
         func = None
         try:
             func = getattr(self.game_logic, method)
-        except:
+        except Exception as e:
+            print('exception:', e)
             print('can not find method in game logic', method)
+            return
 
         func(**args)
 

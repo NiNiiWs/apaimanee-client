@@ -68,6 +68,7 @@ class ApaimaneeClient:
             self.client_id = client_id
         else:
             self.client_id = str(uuid.uuid1())
+            print('uuid:', self.client_id)
 
         self._host = host
         self._port = port
@@ -113,7 +114,7 @@ class ApaimaneeClient:
         self.mqtt_client.message_callback_add('apaimanee/clients/'+self.client_id+'/response',
                 self.rpc.rpc_response)
 
-    def publish(self, topic, request, qos=0, retain=False):
+    def publish(self, topic, request, qos=1, retain=False):
 
         request['client_id'] = self.client_id
 
