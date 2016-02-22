@@ -45,6 +45,7 @@ class GameMonitor(threading.Thread):
 
         if self.game_logic is None:
             print('game logic object not found')
+            return
 
         method = game_msg['method']
         args=dict()
