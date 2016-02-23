@@ -91,17 +91,20 @@ class ApaimaneeClient:
         self.consume_thread = None
 
 
-    def initial(self):
+    def initial(self, is_initial_gm=False):
         self.reconnect()
         self.consume_thread = ConsumeThread(self.mqtt_client)
         self.consume_thread.start()
+        if is_initial_gm and self.gm is None:
+            self.gm = monitors.GameMonitor(self)
 
     def reconnect(self):
         print('connnect to api:', self._host, ' port:', self._port)
         self.mqtt_client.connect(self._host, self._port, 60)
         #self.mqtt_client.subscribe('apaimanee/clients/#')
         self.register_callback()
-        self.gm = monitors.GameMonitor(self)
+        if self.gm:
+            self.gm = monitors.GameMonitor(self)
 
     def disconnect(self):
         if self.consume_thread:
