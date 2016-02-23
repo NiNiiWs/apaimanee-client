@@ -114,7 +114,7 @@ class ApaimaneeClient:
         self.mqtt_client.message_callback_add('apaimanee/clients/'+self.client_id+'/response',
                 self.rpc.rpc_response)
 
-    def publish(self, topic, request, qos=1, retain=False):
+    def publish(self, topic, request, qos=0, retain=False):
 
         request['client_id'] = self.client_id
 
