@@ -122,8 +122,8 @@ class ApaimaneeClient:
 
         payload = json.dumps(request)
 
-        print('topic:', topic,'publish:', payload,)
         self.mqtt_client.publish(topic, payload, qos, retain)
+        print('topic:', topic,'publish:', payload,)
 
 
     def call(self, method, args=None):
