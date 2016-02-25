@@ -27,4 +27,4 @@ class GameManager(Manager):
     def skill_action(self, skill):
         args = dict(skill=skill)
 
-        self.update('skill_action'. args)
+        self.update('skill_action', args)
