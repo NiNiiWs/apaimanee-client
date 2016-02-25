@@ -24,3 +24,7 @@ class GameManager(Manager):
         args = dict(x=x, y=y)
         self.update('move_hero', args)
 
+    def skill_action(self, skill):
+        args = dict(skill=skill)
+
+        self.update('skill_action'. args)
