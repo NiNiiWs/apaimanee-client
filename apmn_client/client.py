@@ -11,7 +11,7 @@ from . import managers
 from . import monitors
 
 def on_connect(client, userdata, rc):
-    print("Connected with result code "+str(rc))
+    print("Connected with result code "+str(rc), "current thread", threading.current_thread())
     client.subscribe('apaimanee/clients/{}/#'.format(client._client_id))
 
 
@@ -50,19 +50,16 @@ class ConsumeThread(threading.Thread):
 
     def stop(self):
         self.running = False
-        self.mqtt_client.disconnect()
 
     def run(self):
-
-        try:
-            self.mqtt_client.loop_forever()
-        except Exception as e:
-            print('Exception:', e)
-        finally:
-            self.mqtt_client.disconnect()
+        while self.running:
+            try:
+                self.mqtt_client.loop()
+            except Exception as e:
+                print('Exception:', e)
 
 class ApaimaneeClient:
-    def __init__(self, client_id=None, host='localhost', port=1883):
+    def __init__(self, client_id=None, host='localhost', port=1883, rpc_server=False):
 
         if client_id:
             self.client_id = client_id
@@ -72,6 +69,7 @@ class ApaimaneeClient:
 
         self._host = host
         self._port = port
+        self._rpc_server = rpc_server
 
         self.mqtt_client = mqttclient.Client(self.client_id,
                 clean_session=False)
@@ -79,22 +77,28 @@ class ApaimaneeClient:
         self.mqtt_client.on_connect = on_connect
         self.mqtt_client.on_message = on_message
 
+        self.consume_thread = None
 
-        self.rpc = RPC()
-        self.mqtt_client.user_data_set(self.rpc)
+        if self._rpc_server:
+            self.rpc = RPC()
+            self.mqtt_client.user_data_set(self.rpc)
 
         # add adition manager
         self.user = managers.UserManager(self)
         self.room = managers.RoomManager(self)
         self.game = managers.GameManager(self)
         self.gm = None
-        self.consume_thread = None
-
 
     def initial(self, is_initial_gm=False):
         self.reconnect()
-        self.consume_thread = ConsumeThread(self.mqtt_client)
-        self.consume_thread.start()
+
+        if self.consume_thread:
+            self.consume_thread.stop()
+            self.consume_thread.join()
+        else:
+            self.consume_thread = ConsumeThread(self.mqtt_client)
+            self.consume_thread.start()
+
         if is_initial_gm and self.gm is None:
             self.gm = monitors.GameMonitor(self)
 
@@ -107,15 +111,17 @@ class ApaimaneeClient:
             self.gm = monitors.GameMonitor(self)
 
     def disconnect(self):
-        if self.consume_thread:
+        self.mqtt_client.disconnect()
+        if self._rpc_server and self.consume_thread:
             self.consume_thread.stop()
         if self.gm:
             self.gm.stop()
 
     def register_callback(self):
-        print('regist:', 'apaimanee/clients/'+self.client_id+'/response')
-        self.mqtt_client.message_callback_add('apaimanee/clients/'+self.client_id+'/response',
-                self.rpc.rpc_response)
+        if self._rpc_server:
+            print('regist:', 'apaimanee/clients/'+self.client_id+'/response')
+            self.mqtt_client.message_callback_add('apaimanee/clients/'+self.client_id+'/response',
+                    self.rpc.rpc_response)
 
     def publish(self, topic, request, qos=0, retain=False):
 
