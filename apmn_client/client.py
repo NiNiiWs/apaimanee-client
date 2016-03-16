@@ -86,10 +86,12 @@ class ApaimaneeClient:
         # add adition manager
         self.user = managers.UserManager(self)
         self.room = managers.RoomManager(self)
-        self.game = managers.GameManager(self)
+        # self.game = managers.GameManager(self)
         self.gm = None
 
     def initial(self, is_initial_gm=False):
+
+        self.game = managers.GameManager(self)
         self.reconnect()
 
         if self.consume_thread:

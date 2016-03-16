@@ -4,11 +4,12 @@ from .base import Manager
 class GameManager(Manager):
     def __init__(self, client):
         super().__init__(client)
-        room_id = self.client.room.current_room['room_id']
-        self.topic = 'apaimanee/clients/{}/rooms/{}/update'.format(self.client.client_id, room_id)
+        self.room_id = self.client.room.current_room['room_id']
+        self.topic = 'apaimanee/clients/{}/rooms/{}/update'.format(self.client.client_id,
+                self.room_id)
 
     def send_message(self, method, args, qos=0):
-        request = dict(room_id=room_id, method=method, args=args)
+        request = dict(room_id=self.room_id, method=method, args=args)
 
         self.client.publish(self.topic, request, qos)
 
